@@ -9,6 +9,7 @@ var jwt = require("express-jwt");
 var dbConfig = require("./config/database.config");
 
 var { attachUser } = require("./middlewares/attachUser.middleware");
+var User = require("./app/models/user.model");
 
 var indexRouter = require("./routes/index");
 var tasksRouter = require("./routes/tasks");
@@ -45,7 +46,22 @@ app.use("/auth", authRouter);
 
 app.use(
   "/tasks",
-  jwt({ secret: "heart-is-valuable" }),
+  (req, res, next) => {
+    console.log("recieving in /tasks...");
+    console.log(req.headers.authorization);
+    next();
+  },
+  async (req, res, next) => {
+    jwt({
+      secret: "heart-is-valuable"
+      // userProperty: "token",
+      // getToken: () => {
+      //   return req.headers.authorization;
+      // }
+    });
+
+    next();
+  },
   attachUser,
   tasksRouter
 );
