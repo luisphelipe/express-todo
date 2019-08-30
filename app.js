@@ -46,22 +46,10 @@ app.use("/auth", authRouter);
 
 app.use(
   "/tasks",
-  (req, res, next) => {
-    console.log("recieving in /tasks...");
-    console.log(req.headers.authorization);
-    next();
-  },
-  async (req, res, next) => {
-    jwt({
-      secret: "heart-is-valuable"
-      // userProperty: "token",
-      // getToken: () => {
-      //   return req.headers.authorization;
-      // }
-    });
-
-    next();
-  },
+  jwt({
+    secret: "heart-is-valuable",
+    userProperty: "token"
+  }),
   attachUser,
   tasksRouter
 );
