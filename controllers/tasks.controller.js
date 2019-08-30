@@ -6,7 +6,7 @@ exports.create = (req, res) => {
     res.status(400).json({ message: "Task content can not be empty" });
   }
 
-  const task = new Task(req.body);
+  const task = new Task({ ...req.body, owner: req.user._id });
 
   task
     .save()
