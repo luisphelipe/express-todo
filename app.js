@@ -6,7 +6,6 @@ var logger = require("morgan");
 var mongoose = require("mongoose");
 var jwt = require("express-jwt");
 
-var dbConfig = require("./config/database.config");
 require("dotenv").config();
 
 var { attachUser } = require("./middlewares/attachUser.middleware");
