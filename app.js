@@ -7,9 +7,9 @@ var mongoose = require("mongoose");
 var jwt = require("express-jwt");
 
 var dbConfig = require("./config/database.config");
+require("dotenv").config();
 
 var { attachUser } = require("./middlewares/attachUser.middleware");
-var User = require("./app/models/user.model");
 
 var indexRouter = require("./routes/index");
 var tasksRouter = require("./routes/tasks");
@@ -29,7 +29,7 @@ mongoose.Promise = global.Promise;
 
 // Connecting to the database
 mongoose
-  .connect(dbConfig.url, {
+  .connect(process.env.DATABASE_URI || "mongodb://localhost:27017/todo-app", {
     useNewUrlParser: true
   })
   .then(() => {
