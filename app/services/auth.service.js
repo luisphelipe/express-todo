@@ -5,12 +5,11 @@ const User = require("../models/user.model");
 module.exports.AuthService = function() {
   // Create and Save a new Task
   async function signup(email, password) {
-    // signup: async (email, password) => {
-    // exports.signup = async (username, email, password) => {
+    // validate email and password
     let user = await User.find({ email });
 
     if (user) {
-      return new Error("Email is already in use");
+      return new Error("Email is already taken");
     }
 
     // hash the password (argon2.hash)
@@ -36,20 +35,15 @@ module.exports.AuthService = function() {
   async function login(email, password) {
     let user = await User.findOne({ email });
 
-    // return error if user not found
     if (!user) {
-      console.log("Wrong email or password (email)");
+      throw new Error("Wrong email or password (email)");
     }
 
     // use argon2 to verify if password match records (argon2.verify)
     const match = await argon2.verify(user.password, password);
 
-    // remove unwanted fields from the user
-    // user = { _id: user._id, username: user.username, email: user.email };
-
-    //     - return error if not match
     if (!match) {
-      console.log("Wrong email or password (password)");
+      throw new Error("Wrong email or password (password)");
     }
 
     // create JWT token of the user record (with generate token)
@@ -59,12 +53,15 @@ module.exports.AuthService = function() {
   }
 
   async function signupAndLogin(email, password) {
-    // signup: async (email, password) => {
-    // exports.signup = async (username, email, password) => {
-    let user = User.find({ email });
+    // validate email and password
+    if (!email || !password) {
+      throw new Error("Both email and password are required");
+    }
+
+    let user = await User.findOne({ email });
 
     if (user) {
-      throw new Error("Email is already in use");
+      throw new Error("Email is already taken");
     }
 
     // hash the password (argon2.hash)
