@@ -6,11 +6,11 @@ exports.signup = async (req, res) => {
     { email, password, passwordConfirmation } = req.body;
 
   if (!email || !password || !passwordConfirmation) {
-    res.status(400).json({ error: "All fields are required" });
+    return res.status(400).json({ error: "All fields are required" });
   }
 
   if (password !== passwordConfirmation) {
-    res
+    return res
       .status(400)
       .json({ error: "password and password confirmation don't match" });
   }
@@ -39,13 +39,13 @@ exports.login = async (req, res) => {
     { email, password } = req.body;
 
   if (!email || !password) {
-    res.status(400).json({ error: "All fields are required" });
+    return res.status(400).json({ error: "All fields are required" });
   }
 
   try {
     payload = await AuthService().login(email, password);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    return res.status(400).json({ error: error.message });
   }
 
   res.json(payload);
