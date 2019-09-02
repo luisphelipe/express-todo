@@ -1,35 +1,39 @@
 const { AuthService } = require("../app/services/auth.service");
 
-// Create and Return a new User
+// Create and Login with new user
 exports.signup = async (req, res) => {
-  // get email, user, password and password confirmation(must validate)
-  const { email, password, passwordConfirmation } = req.body;
-  // const { username, email, password } = req.body;
+  let payload,
+    { email, password, passwordConfirmation } = req.body;
 
+  // TODO
   // validate username, email, password and password_confirmation
   //     - return error if not valid
 
-  // console.log(AuthService());
-  // send email and password to the auth service
-  const user = await AuthService().signup(
-    email,
-    password,
-    passwordConfirmation
-  );
-  // const user = await AuthService.signup(username, email, password);
+  try {
+    payload = await AuthService().signupAndLogin(
+      email,
+      password,
+      passwordConfirmation
+    );
+  } catch (error) {
+    res.status(400).json({ error });
+  }
 
-  // return user record (without email)
-  res.json(user);
+  // payload = await AuthService().login(user.email, password);
+
+  res.json(payload);
 };
 
 // Create and return JWT token
 exports.login = async (req, res) => {
-  // get email and password (must validate)
-  const { email, password } = req.body;
+  let payload,
+    { email, password } = req.body;
 
-  // send email and password to the auth service
-  const loginPayload = await AuthService().login(email, password);
+  try {
+    payload = await AuthService().login(email, password);
+  } catch (error) {
+    res.status(400).json({ error });
+  }
 
-  // return loginPaylod: { user, token }
-  res.json(loginPayload);
+  res.json(payload);
 };
